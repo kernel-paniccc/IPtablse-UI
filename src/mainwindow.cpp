@@ -10,7 +10,6 @@
 #include <QTableWidget>
 #include <QTimer>
 #include <QVBoxLayout>
-#include <QRandomGenerator>
 
 namespace {
 struct Rule {
@@ -115,9 +114,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto *trafficTimer = new QTimer(this);
     connect(trafficTimer, &QTimer::timeout, this, &MainWindow::updateTraffic);
+    networkMonitor_.sampleMbps();
     trafficTimer->start(1000);
-    for (int i = 0; i < 20; ++i)
-        updateTraffic();
 }
 
 void MainWindow::populateRules()
@@ -151,15 +149,11 @@ void MainWindow::applyFilter(const QString &chain)
 
 void MainWindow::updateTraffic()
 {
-    auto *random = QRandomGenerator::global();
-    incomingMbps_ = qBound(1.0, incomingMbps_ + random->bounded(8.0) - 4.0, 95.0);
-    outgoingMbps_ = qBound(0.5, outgoingMbps_ + random->bounded(4.0) - 2.0, 55.0);
-    if (random->bounded(12) == 0)
-        incomingMbps_ = qMin(95.0, incomingMbps_ + random->bounded(18.0));
-    trafficChart_->addSample(incomingMbps_, outgoingMbps_);
+    const auto traffic = networkMonitor_.sampleMbps();
+    trafficChart_->addSample(traffic.first, traffic.second);
     trafficStats_->setText(QString("<span style='color:#2563eb'>●</span> Входящий %1 Mbps &nbsp;&nbsp; "
                                    "<span style='color:#f97316'>●</span> Исходящий %2 Mbps")
-                               .arg(incomingMbps_, 0, 'f', 1)
-                               .arg(outgoingMbps_, 0, 'f', 1));
+                               .arg(traffic.first, 0, 'f', 2)
+                               .arg(traffic.second, 0, 'f', 2));
 }
 
