@@ -1,0 +1,22 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "local-qt",
+      "displayName": "Local Qt SDK",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_PREFIX_PATH": "${sourceDir}/.qt/6.5.3/macos"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "local-qt",
+      "configurePreset": "local-qt",
+      "jobs": 2
+    }
+  ]
+}
