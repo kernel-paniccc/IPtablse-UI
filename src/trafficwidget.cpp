@@ -10,6 +10,7 @@ TrafficWidget::TrafficWidget(QWidget *parent)
     : QWidget(parent)
 {
     setMinimumHeight(210);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 void TrafficWidget::addSample(double incomingMbps, double outgoingMbps)
@@ -28,7 +29,10 @@ void TrafficWidget::paintEvent(QPaintEvent *event)
     Q_UNUSED(event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
-    painter.fillRect(rect(), QColor("#ffffff"));
+    const QRectF panel = QRectF(rect()).adjusted(0.5, 0.5, -0.5, -0.5);
+    painter.setPen(QPen(QColor("#dbe3ee"), 1));
+    painter.setBrush(QColor("#ffffff"));
+    painter.drawRoundedRect(panel, 8, 8);
 
     const QRectF chart = rect().adjusted(52, 18, -18, -34);
     painter.setPen(QPen(QColor("#e2e8f0"), 1));

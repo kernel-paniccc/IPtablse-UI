@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     setWindowTitle("iptables — правила firewall");
-    resize(1120, 640);
+    resize(1120, 760);
 
     auto *central = new QWidget(this);
     auto *layout = new QVBoxLayout(central);
@@ -80,6 +80,7 @@ MainWindow::MainWindow(QWidget *parent)
     rulesTable_->setEditTriggers(QAbstractItemView::NoEditTriggers);
     rulesTable_->verticalHeader()->setVisible(false);
     rulesTable_->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    rulesTable_->setMinimumHeight(250);
     layout->addWidget(rulesTable_);
 
     auto *trafficTitle = new QLabel("Трафик сети в реальном времени", central);
