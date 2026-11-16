@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "iptablesloader.h"
 #include "trafficwidget.h"
 
 #include <QAbstractItemView>
@@ -12,25 +13,6 @@
 #include <QVBoxLayout>
 
 namespace {
-struct Rule {
-    QString chain;
-    QString action;
-    QString protocol;
-    QString source;
-    QString destination;
-    QString port;
-    QString interfaceName;
-    QString packets;
-};
-
-const QList<Rule> demoRules = {
-    {"INPUT", "ACCEPT", "tcp", "192.168.1.0/24", "0.0.0.0/0", "22", "eth0", "1 284"},
-    {"INPUT", "ACCEPT", "tcp", "0.0.0.0/0", "0.0.0.0/0", "80, 443", "eth0", "15 902"},
-    {"INPUT", "DROP", "all", "10.20.30.40", "0.0.0.0/0", "—", "*", "37"},
-    {"FORWARD", "ACCEPT", "all", "172.18.0.0/16", "0.0.0.0/0", "—", "docker0", "8 411"},
-    {"OUTPUT", "ACCEPT", "udp", "0.0.0.0/0", "8.8.8.8", "53", "*", "2 106"},
-};
-
 QColor actionColor(const QString &action)
 {
     return action == "ACCEPT" ? QColor("#dcfce7") : QColor("#fee2e2");
@@ -50,10 +32,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto *title = new QLabel("Правила iptables", central);
     title->setObjectName("title");
-    auto *subtitle = new QLabel("Просмотр активных правил сетевого экрана", central);
-    subtitle->setObjectName("subtitle");
+    sourceStatus_ = new QLabel("Загрузка активных правил сетевого экрана…", central);
+    sourceStatus_->setObjectName("subtitle");
     layout->addWidget(title);
-    layout->addWidget(subtitle);
+    layout->addWidget(sourceStatus_);
 
     auto *toolbar = new QFrame(central);
     auto *toolbarLayout = new QHBoxLayout(toolbar);
@@ -121,7 +103,13 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::populateRules()
 {
     rulesTable_->setRowCount(0);
-    for (const auto &rule : demoRules) {
+    QString error;
+    const auto rules = IptablesLoader().load(&error);
+    sourceStatus_->setText(error.isEmpty()
+        ? QString("Источник: iptables-save · загружено правил: %1").arg(rules.size())
+        : error);
+    sourceStatus_->setStyleSheet(error.isEmpty() ? QString() : "color: #b45309;");
+    for (const auto &rule : rules) {
         const int row = rulesTable_->rowCount();
         rulesTable_->insertRow(row);
         const QStringList values = {rule.chain, rule.action, rule.protocol, rule.source,

@@ -22,6 +22,7 @@ private:
     QTableWidget *rulesTable_ = nullptr;
     QComboBox *chainFilter_ = nullptr;
     QLabel *ruleCount_ = nullptr;
+    QLabel *sourceStatus_ = nullptr;
     QLabel *trafficStats_ = nullptr;
     TrafficWidget *trafficChart_ = nullptr;
     NetworkMonitor networkMonitor_;
