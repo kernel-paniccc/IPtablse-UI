@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "trafficwidget.h"
 
 #include <QAbstractItemView>
 #include <QComboBox>
@@ -79,11 +80,18 @@ MainWindow::MainWindow(QWidget *parent)
     rulesTable_->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     layout->addWidget(rulesTable_);
 
+    auto *trafficTitle = new QLabel("Трафик сети в реальном времени", central);
+    trafficTitle->setObjectName("sectionTitle");
+    layout->addWidget(trafficTitle);
+    trafficChart_ = new TrafficWidget(central);
+    layout->addWidget(trafficChart_);
+
     setCentralWidget(central);
     setStyleSheet(R"(
         QMainWindow, QWidget { background: #f8fafc; color: #172033; font-size: 14px; }
         QLabel#title { font-size: 28px; font-weight: 700; }
         QLabel#subtitle { color: #64748b; margin-bottom: 8px; }
+        QLabel#sectionTitle { font-size: 18px; font-weight: 700; margin-top: 8px; }
         QTableWidget { background: white; border: 1px solid #dbe3ee; border-radius: 8px; gridline-color: #e8edf4; }
         QHeaderView::section { background: #eef2f7; border: 0; border-bottom: 1px solid #dbe3ee; padding: 10px 6px; font-weight: 600; }
         QTableWidget::item { padding: 8px; }

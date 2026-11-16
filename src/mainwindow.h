@@ -5,6 +5,7 @@
 class QComboBox;
 class QLabel;
 class QTableWidget;
+class TrafficWidget;
 
 class MainWindow final : public QMainWindow
 {
@@ -18,5 +19,6 @@ private:
     QTableWidget *rulesTable_ = nullptr;
     QComboBox *chainFilter_ = nullptr;
     QLabel *ruleCount_ = nullptr;
+    TrafficWidget *trafficChart_ = nullptr;
 };
 
