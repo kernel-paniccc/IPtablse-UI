@@ -20,6 +20,7 @@ private:
     QTableWidget *rulesTable_ = nullptr;
     QComboBox *chainFilter_ = nullptr;
     QLabel *ruleCount_ = nullptr;
+    QLabel *trafficStats_ = nullptr;
     TrafficWidget *trafficChart_ = nullptr;
     double incomingMbps_ = 18.0;
     double outgoingMbps_ = 7.0;

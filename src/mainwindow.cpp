@@ -84,7 +84,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto *trafficTitle = new QLabel("Трафик сети в реальном времени", central);
     trafficTitle->setObjectName("sectionTitle");
-    layout->addWidget(trafficTitle);
+    auto *trafficHeader = new QHBoxLayout;
+    trafficHeader->addWidget(trafficTitle);
+    trafficHeader->addStretch();
+    trafficStats_ = new QLabel("● Входящий 0.0 Mbps    ● Исходящий 0.0 Mbps", central);
+    trafficStats_->setObjectName("trafficStats");
+    trafficHeader->addWidget(trafficStats_);
+    layout->addLayout(trafficHeader);
     trafficChart_ = new TrafficWidget(central);
     layout->addWidget(trafficChart_);
 
@@ -94,6 +100,7 @@ MainWindow::MainWindow(QWidget *parent)
         QLabel#title { font-size: 28px; font-weight: 700; }
         QLabel#subtitle { color: #64748b; margin-bottom: 8px; }
         QLabel#sectionTitle { font-size: 18px; font-weight: 700; margin-top: 8px; }
+        QLabel#trafficStats { color: #475569; font-weight: 600; }
         QTableWidget { background: white; border: 1px solid #dbe3ee; border-radius: 8px; gridline-color: #e8edf4; }
         QHeaderView::section { background: #eef2f7; border: 0; border-bottom: 1px solid #dbe3ee; padding: 10px 6px; font-weight: 600; }
         QTableWidget::item { padding: 8px; }
@@ -149,5 +156,9 @@ void MainWindow::updateTraffic()
     if (random->bounded(12) == 0)
         incomingMbps_ = qMin(95.0, incomingMbps_ + random->bounded(18.0));
     trafficChart_->addSample(incomingMbps_, outgoingMbps_);
+    trafficStats_->setText(QString("<span style='color:#2563eb'>●</span> Входящий %1 Mbps &nbsp;&nbsp; "
+                                   "<span style='color:#f97316'>●</span> Исходящий %2 Mbps")
+                               .arg(incomingMbps_, 0, 'f', 1)
+                               .arg(outgoingMbps_, 0, 'f', 1));
 }
 
