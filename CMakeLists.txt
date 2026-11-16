@@ -12,6 +12,8 @@ qt_add_executable(iptables-ui
     src/main.cpp
     src/mainwindow.cpp
     src/mainwindow.h
+    src/networkmonitor.cpp
+    src/networkmonitor.h
     src/trafficwidget.cpp
     src/trafficwidget.h
 )
