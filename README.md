@@ -10,6 +10,10 @@
 - realtime-график входящего и исходящего трафика за последние 60 секунд;
 - текущие значения скорости в Mbps.
 
+Трафик читается из системных счётчиков сетевых интерфейсов. Правила загружаются
+командой `iptables-save -c` на Linux. На macOS график работает с реальными
+данными, а таблица сообщает, что `iptables` в этой системе отсутствует.
+
 ## Интерфейс
 
 ![Демо интерфейса iptables UI](docs/iptables-ui-demo.png)
@@ -17,8 +21,8 @@
 ## Сборка
 
 ```bash
-cmake -S . -B build
-cmake --build build
+cmake --preset local-qt
+cmake --build --preset local-qt
 ./build/iptables-ui
 ```
 
