@@ -1,0 +1,8 @@
+# Local build and Qt SDK
+/build/
+/.qt/
+/.tools/
+/aqtinstall.log
+
+# macOS
+.DS_Store
