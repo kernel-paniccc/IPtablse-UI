@@ -8,7 +8,9 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QTableWidget>
+#include <QTimer>
 #include <QVBoxLayout>
+#include <QRandomGenerator>
 
 namespace {
 struct Rule {
@@ -102,6 +104,12 @@ MainWindow::MainWindow(QWidget *parent)
     populateRules();
     connect(chainFilter_, &QComboBox::currentTextChanged, this, &MainWindow::applyFilter);
     connect(refreshButton, &QPushButton::clicked, this, &MainWindow::populateRules);
+
+    auto *trafficTimer = new QTimer(this);
+    connect(trafficTimer, &QTimer::timeout, this, &MainWindow::updateTraffic);
+    trafficTimer->start(1000);
+    for (int i = 0; i < 20; ++i)
+        updateTraffic();
 }
 
 void MainWindow::populateRules()
@@ -131,5 +139,15 @@ void MainWindow::applyFilter(const QString &chain)
         visible += show ? 1 : 0;
     }
     ruleCount_->setText(QString("Правил: %1").arg(visible));
+}
+
+void MainWindow::updateTraffic()
+{
+    auto *random = QRandomGenerator::global();
+    incomingMbps_ = qBound(1.0, incomingMbps_ + random->bounded(8.0) - 4.0, 95.0);
+    outgoingMbps_ = qBound(0.5, outgoingMbps_ + random->bounded(4.0) - 2.0, 55.0);
+    if (random->bounded(12) == 0)
+        incomingMbps_ = qMin(95.0, incomingMbps_ + random->bounded(18.0));
+    trafficChart_->addSample(incomingMbps_, outgoingMbps_);
 }
 

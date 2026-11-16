@@ -15,10 +15,13 @@ public:
 private:
     void populateRules();
     void applyFilter(const QString &chain);
+    void updateTraffic();
 
     QTableWidget *rulesTable_ = nullptr;
     QComboBox *chainFilter_ = nullptr;
     QLabel *ruleCount_ = nullptr;
     TrafficWidget *trafficChart_ = nullptr;
+    double incomingMbps_ = 18.0;
+    double outgoingMbps_ = 7.0;
 };
 
