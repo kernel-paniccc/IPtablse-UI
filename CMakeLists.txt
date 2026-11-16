@@ -12,6 +12,8 @@ qt_add_executable(iptables-ui
     src/main.cpp
     src/mainwindow.cpp
     src/mainwindow.h
+    src/trafficwidget.cpp
+    src/trafficwidget.h
 )
 
 target_link_libraries(iptables-ui PRIVATE Qt6::Widgets)
