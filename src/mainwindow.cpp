@@ -82,8 +82,8 @@ MainWindow::MainWindow(QWidget *parent)
     layout->addWidget(trafficChart_);
 
     auto *profileLayout = new QVBoxLayout(profilePage);
-    auto *profileTable = new QTableWidget(0, 2, profilePage);
-    profileTable->setHorizontalHeaderLabels({"Цепочка", "Протокол"});
+    auto *profileTable = new QTableWidget(0, 4, profilePage);
+    profileTable->setHorizontalHeaderLabels({"Цепочка", "Протокол", "Порт назначения", "Действие"});
     profileTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     profileLayout->addWidget(profileTable);
 
