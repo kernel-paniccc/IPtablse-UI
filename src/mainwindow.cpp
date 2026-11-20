@@ -8,6 +8,7 @@
 #include <QHeaderView>
 #include <QLabel>
 #include <QPushButton>
+#include <QTabWidget>
 #include <QTableWidget>
 #include <QTimer>
 #include <QVBoxLayout>
@@ -25,7 +26,11 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle("iptables — правила firewall");
     resize(1120, 760);
 
-    auto *central = new QWidget(this);
+    auto *tabs = new QTabWidget(this);
+    auto *central = new QWidget(tabs);
+    auto *profilePage = new QWidget(tabs);
+    tabs->addTab(central, "Системные правила");
+    tabs->addTab(profilePage, "Локальный профиль");
     auto *layout = new QVBoxLayout(central);
     layout->setContentsMargins(24, 20, 24, 24);
     layout->setSpacing(14);
@@ -76,7 +81,7 @@ MainWindow::MainWindow(QWidget *parent)
     trafficChart_ = new TrafficWidget(central);
     layout->addWidget(trafficChart_);
 
-    setCentralWidget(central);
+    setCentralWidget(tabs);
     setStyleSheet(R"(
         QMainWindow, QWidget { background: #f8fafc; color: #172033; font-size: 14px; }
         QLabel#title { font-size: 28px; font-weight: 700; }
@@ -116,7 +121,7 @@ void MainWindow::populateRules()
                                     rule.destination, rule.port, rule.interfaceName, rule.packets};
         for (int column = 0; column < values.size(); ++column) {
             auto *item = new QTableWidgetItem(values.at(column));
-            if (column == 1)
+           if (column == 1)
                 item->setBackground(actionColor(rule.action));
             rulesTable_->setItem(row, column, item);
         }
@@ -144,4 +149,3 @@ void MainWindow::updateTraffic()
                                .arg(traffic.first, 0, 'f', 2)
                                .arg(traffic.second, 0, 'f', 2));
 }
-
