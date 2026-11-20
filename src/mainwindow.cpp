@@ -81,6 +81,12 @@ MainWindow::MainWindow(QWidget *parent)
     trafficChart_ = new TrafficWidget(central);
     layout->addWidget(trafficChart_);
 
+    auto *profileLayout = new QVBoxLayout(profilePage);
+    auto *profileTable = new QTableWidget(0, 2, profilePage);
+    profileTable->setHorizontalHeaderLabels({"Цепочка", "Протокол"});
+    profileTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    profileLayout->addWidget(profileTable);
+
     setCentralWidget(tabs);
     setStyleSheet(R"(
         QMainWindow, QWidget { background: #f8fafc; color: #172033; font-size: 14px; }
