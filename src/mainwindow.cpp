@@ -91,6 +91,11 @@ MainWindow::MainWindow(QWidget *parent)
     profileButtons->addWidget(new QPushButton("Удалить", profilePage));
     profileButtons->addStretch();
     profileLayout->addLayout(profileButtons);
+    auto *profileHint = new QLabel(
+        "Здесь можно будет настроить правило и посмотреть его перед применением.",
+        profilePage);
+    profileHint->setWordWrap(true);
+    profileLayout->addWidget(profileHint);
     profileLayout->addWidget(profileTable);
 
     setCentralWidget(tabs);
