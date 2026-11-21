@@ -85,6 +85,12 @@ MainWindow::MainWindow(QWidget *parent)
     auto *profileTable = new QTableWidget(0, 4, profilePage);
     profileTable->setHorizontalHeaderLabels({"Цепочка", "Протокол", "Порт назначения", "Действие"});
     profileTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    auto *profileButtons = new QHBoxLayout;
+    profileButtons->addWidget(new QPushButton("Добавить", profilePage));
+    profileButtons->addWidget(new QPushButton("Изменить", profilePage));
+    profileButtons->addWidget(new QPushButton("Удалить", profilePage));
+    profileButtons->addStretch();
+    profileLayout->addLayout(profileButtons);
     profileLayout->addWidget(profileTable);
 
     setCentralWidget(tabs);
