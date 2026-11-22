@@ -29,8 +29,8 @@ MainWindow::MainWindow(QWidget *parent)
     auto *tabs = new QTabWidget(this);
     auto *central = new QWidget(tabs);
     auto *profilePage = new QWidget(tabs);
-    tabs->addTab(central, "Системные правила");
-    tabs->addTab(profilePage, "Локальный профиль");
+    tabs->addTab(central, "Мониторинг");
+    tabs->addTab(profilePage, "Конструктор");
     auto *layout = new QVBoxLayout(central);
     layout->setContentsMargins(24, 20, 24, 24);
     layout->setSpacing(14);
