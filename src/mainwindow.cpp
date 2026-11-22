@@ -90,6 +90,15 @@ MainWindow::MainWindow(QWidget *parent)
     profileButtons->addWidget(new QPushButton("Изменить", profilePage));
     profileButtons->addWidget(new QPushButton("Удалить", profilePage));
     profileButtons->addStretch();
+    auto *chainLayout = new QHBoxLayout;
+    chainLayout->addWidget(new QLabel("Цепочка:", profilePage));
+
+    auto *chainSelector = new QComboBox(profilePage);
+    chainSelector->addItems({"INPUT", "OUTPUT", "FORWARD"});
+    chainLayout->addWidget(chainSelector);
+    chainLayout->addStretch();
+
+    profileLayout->addLayout(chainLayout);
     profileLayout->addLayout(profileButtons);
     auto *profileHint = new QLabel(
         "Здесь можно будет настроить правило и посмотреть его перед применением.",
