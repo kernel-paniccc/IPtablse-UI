@@ -99,6 +99,15 @@ MainWindow::MainWindow(QWidget *parent)
     chainLayout->addStretch();
 
     profileLayout->addLayout(chainLayout);
+    auto *protocolLayout = new QHBoxLayout;
+    protocolLayout->addWidget(new QLabel("Протокол:", profilePage));
+
+    auto *protocolSelector = new QComboBox(profilePage);
+    protocolSelector->addItems({"TCP", "UDP"});
+    protocolLayout->addWidget(protocolSelector);
+    protocolLayout->addStretch();
+
+    profileLayout->addLayout(protocolLayout);
     profileLayout->addLayout(profileButtons);
     auto *profileHint = new QLabel(
         "Здесь можно будет настроить правило и посмотреть его перед применением.",
