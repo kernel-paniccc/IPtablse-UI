@@ -46,3 +46,4 @@ bool RuleProfile::removeRule(int id, QString* errorMessage)
     rules_.erase(it);
     return true;
 }
+
