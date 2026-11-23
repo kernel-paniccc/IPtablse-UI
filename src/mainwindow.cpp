@@ -12,6 +12,7 @@
 #include <QTableWidget>
 #include <QTimer>
 #include <QVBoxLayout>
+#include <QSpinBox>
 
 namespace {
 QColor actionColor(const QString &action)
@@ -108,6 +109,16 @@ MainWindow::MainWindow(QWidget *parent)
     protocolLayout->addStretch();
 
     profileLayout->addLayout(protocolLayout);
+    auto *portLayout = new QHBoxLayout;
+    portLayout->addWidget(new QLabel("Порт назначения:", profilePage));
+
+    auto *portInput = new QSpinBox(profilePage);
+    portInput->setRange(1, 65535);
+    portInput->setValue(443);
+    portLayout->addWidget(portInput);
+    portLayout->addStretch();
+
+    profileLayout->addLayout(portLayout);
     profileLayout->addLayout(profileButtons);
     auto *profileHint = new QLabel(
         "Здесь можно будет настроить правило и посмотреть его перед применением.",
