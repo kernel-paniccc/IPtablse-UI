@@ -119,6 +119,15 @@ MainWindow::MainWindow(QWidget *parent)
     portLayout->addStretch();
 
     profileLayout->addLayout(portLayout);
+    auto *actionLayout = new QHBoxLayout;
+    actionLayout->addWidget(new QLabel("Действие:", profilePage));
+
+    auto *actionSelector = new QComboBox(profilePage);
+    actionSelector->addItems({"ACCEPT", "DROP"});
+    actionLayout->addWidget(actionSelector);
+    actionLayout->addStretch();
+
+    profileLayout->addLayout(actionLayout);
     profileLayout->addLayout(profileButtons);
     auto *profileHint = new QLabel(
         "Здесь можно будет настроить правило и посмотреть его перед применением.",
