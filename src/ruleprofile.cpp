@@ -24,3 +24,25 @@ std::optional<ProfileRule> RuleProfile::getRuleById(int id) const
     }
     return std::nullopt;
 }
+
+bool RuleProfile::updateRule(const ProfileRule& rule, QString* errorMessage)
+{
+    if (!validateRule(rule, errorMessage)) return false;
+    for (auto& r : rules_) {
+        if (r.id == rule.id) { r = rule; return true; }
+    }
+    if (errorMessage) *errorMessage = "Правило с ID " + QString::number(rule.id) + " не найдено.";
+    return false;
+}
+
+bool RuleProfile::removeRule(int id, QString* errorMessage)
+{
+    const auto it = std::find_if(rules_.begin(), rules_.end(),
+        [id](const ProfileRule& r) { return r.id == id; });
+    if (it == rules_.end()) {
+        if (errorMessage) *errorMessage = "Правило с ID " + QString::number(id) + " не найдено.";
+        return false;
+    }
+    rules_.erase(it);
+    return true;
+}
