@@ -145,6 +145,14 @@ MainWindow::MainWindow(QWidget *parent)
                 .arg(portInput->value())
                 .arg(actionSelector->currentText()));
     });
+    const auto clearPreview = [profilePreview] {
+        profilePreview->setText("Выбери параметры и нажми «Предпросмотр».");
+    };
+
+    connect(chainSelector, &QComboBox::currentIndexChanged, this, clearPreview);
+    connect(protocolSelector, &QComboBox::currentIndexChanged, this, clearPreview);
+    connect(portInput, &QSpinBox::valueChanged, this, clearPreview);
+    connect(actionSelector, &QComboBox::currentIndexChanged, this, clearPreview);
     profileLayout->addWidget(profileTable);
 
     setCentralWidget(tabs);
