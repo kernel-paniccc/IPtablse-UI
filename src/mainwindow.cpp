@@ -129,11 +129,22 @@ MainWindow::MainWindow(QWidget *parent)
 
     profileLayout->addLayout(actionLayout);
     profileLayout->addLayout(profileButtons);
-    auto *profileHint = new QLabel(
-        "Здесь можно будет настроить правило и посмотреть его перед применением.",
-        profilePage);
-    profileHint->setWordWrap(true);
-    profileLayout->addWidget(profileHint);
+    auto *previewButton = new QPushButton("Предпросмотр", profilePage);
+    profileLayout->addWidget(previewButton);
+
+    auto *profilePreview = new QLabel("Выбери параметры и нажми «Предпросмотр».", profilePage);
+    profilePreview->setWordWrap(true);
+    profileLayout->addWidget(profilePreview);
+
+    connect(previewButton, &QPushButton::clicked, this,
+            [chainSelector, protocolSelector, portInput, actionSelector, profilePreview] {
+        profilePreview->setText(
+            QString("Цепочка: %1 | Протокол: %2 | Порт: %3 | Действие: %4")
+                .arg(chainSelector->currentText())
+                .arg(protocolSelector->currentText())
+                .arg(portInput->value())
+                .arg(actionSelector->currentText()));
+    });
     profileLayout->addWidget(profileTable);
 
     setCentralWidget(tabs);
