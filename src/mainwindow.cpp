@@ -153,6 +153,17 @@ MainWindow::MainWindow(QWidget *parent)
     connect(protocolSelector, &QComboBox::currentIndexChanged, this, clearPreview);
     connect(portInput, &QSpinBox::valueChanged, this, clearPreview);
     connect(actionSelector, &QComboBox::currentIndexChanged, this, clearPreview);
+    auto *resetButton = new QPushButton("Сбросить форму", profilePage);
+    profileLayout->addWidget(resetButton);
+
+    connect(resetButton, &QPushButton::clicked, this,
+            [chainSelector, protocolSelector, portInput, actionSelector, clearPreview] {
+        chainSelector->setCurrentIndex(0);
+        protocolSelector->setCurrentIndex(0);
+        portInput->setValue(443);
+        actionSelector->setCurrentIndex(0);
+        clearPreview();
+    });
     profileLayout->addWidget(profileTable);
 
     setCentralWidget(tabs);
