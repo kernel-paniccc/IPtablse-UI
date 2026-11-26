@@ -1,5 +1,8 @@
-name: Git policy
-on: [push, pull_request]
+name: CI
+on:
+  push:
+    branches: ['**']
+  pull_request:
 permissions:
   contents: read
 jobs:
@@ -36,3 +39,57 @@ jobs:
             subject=$(git show -s --format=%s "$sha")
             [[ "$subject" =~ $commit_pattern ]] || { echo "Invalid commit title at $sha"; exit 1; }
           done
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install Qt
+        run: sudo apt-get update && sudo apt-get install -y qt6-base-dev
+      - name: Build
+        run: |
+          cmake -S . -B build-ci -DCMAKE_BUILD_TYPE=Release
+          cmake --build build-ci --parallel 2
+      - name: Check application startup
+        run: |
+          QT_QPA_PLATFORM=offscreen ./build-ci/iptables-ui &
+          pid=$!
+          sleep 3
+          kill -TERM "$pid"
+          status=0
+          wait "$pid" || status=$?
+          test "$status" -eq 143
+
+  rollback:
+    needs: [naming, build]
+    if: >-
+      failure() && github.event_name == 'push' &&
+      !github.event.created && !github.event.forced &&
+      (needs.naming.result == 'failure' || needs.build.result == 'failure')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+      - name: Restore the tree from before the failed push
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+          BRANCH_REF: ${{ github.ref }}
+        run: |
+          set -eu
+          remote=$(git ls-remote --exit-code origin "$BRANCH_REF")
+          if [[ "${remote%%[[:space:]]*}" != "$AFTER" ]]; then
+            echo "Branch advanced since this run. Skipping rollback."
+            exit 0
+          fi
+          git merge-base --is-ancestor "$BEFORE" "$AFTER"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rollback=$(git commit-tree "$BEFORE^{tree}" -p "$AFTER" -m "revert: restore tree before failed push $AFTER")
+          git push --force-with-lease="$BRANCH_REF:$AFTER" origin "$rollback:$BRANCH_REF"
