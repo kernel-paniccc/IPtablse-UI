@@ -1,6 +1,7 @@
 #pragma once
 
 #include "networkmonitor.h"
+#include "ruleprofile.h"
 
 #include <QMainWindow>
 
@@ -25,6 +26,7 @@ private:
     QLabel *sourceStatus_ = nullptr;
     QLabel *trafficStats_ = nullptr;
     TrafficWidget *trafficChart_ = nullptr;
+    RuleProfile profile_;
     NetworkMonitor networkMonitor_;
 };
 

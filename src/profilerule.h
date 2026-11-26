@@ -8,5 +8,8 @@ struct ProfileRule {
     int destinationPort;
     QString action;
 
-    bool operator==(const ProfileRule& other) const = default;
+    bool operator==(const ProfileRule& other) const {
+        return id == other.id && chain == other.chain && protocol == other.protocol
+            && destinationPort == other.destinationPort && action == other.action;
+    }
 };

@@ -181,14 +181,46 @@ MainWindow::MainWindow(QWidget *parent)
         actionSelector->setCurrentIndex(0);
         clearPreview();
     });
-    connect(addRuleButton, &QPushButton::clicked, this,
-            [profileTable, chainSelector, protocolSelector, portInput, actionSelector]() {
-        const int row = profileTable->rowCount();
-        profileTable->insertRow(row);
-        profileTable->setItem(row, 0, new QTableWidgetItem(chainSelector->currentText()));
-        profileTable->setItem(row, 1, new QTableWidgetItem(protocolSelector->currentText()));
-        profileTable->setItem(row, 2, new QTableWidgetItem(QString::number(portInput->value())));
-        profileTable->setItem(row, 3, new QTableWidgetItem(actionSelector->currentText()));
+    const auto formRule = [chainSelector, protocolSelector, portInput, actionSelector](int id) {
+        return ProfileRule{id, chainSelector->currentText(), protocolSelector->currentText(),
+                           portInput->value(), actionSelector->currentText()};
+    };
+    const auto showRule = [profileTable](int row, const ProfileRule &rule) {
+        auto *chain = new QTableWidgetItem(rule.chain);
+        chain->setData(Qt::UserRole, rule.id);
+        profileTable->setItem(row, 0, chain);
+        profileTable->setItem(row, 1, new QTableWidgetItem(rule.protocol));
+        profileTable->setItem(row, 2, new QTableWidgetItem(QString::number(rule.destinationPort)));
+        profileTable->setItem(row, 3, new QTableWidgetItem(rule.action));
+    };
+    connect(addRuleButton, &QPushButton::clicked, this, [this, profileTable, formRule, showRule] {
+        auto rule = formRule(0);
+        if (profile_.addRule(rule)) {
+            const int row = profileTable->rowCount();
+            profileTable->insertRow(row);
+            showRule(row, rule);
+        }
+    });
+    connect(profileTable, &QTableWidget::itemSelectionChanged, this, [=] {
+        const auto items = profileTable->selectedItems();
+        if (items.isEmpty()) return;
+        const auto rule = profile_.getRuleById(items.first()->data(Qt::UserRole).toInt());
+        if (!rule) return;
+        chainSelector->setCurrentText(rule->chain);
+        protocolSelector->setCurrentText(rule->protocol);
+        portInput->setValue(rule->destinationPort);
+        actionSelector->setCurrentText(rule->action);
+    });
+    connect(editRuleButton, &QPushButton::clicked, this, [=] {
+        const int row = profileTable->currentRow();
+        if (row < 0) return;
+        auto rule = formRule(profileTable->item(row, 0)->data(Qt::UserRole).toInt());
+        if (profile_.updateRule(rule)) showRule(row, rule);
+    });
+    connect(deleteRuleButton, &QPushButton::clicked, this, [=] {
+        const int row = profileTable->currentRow();
+        if (row >= 0 && profile_.removeRule(profileTable->item(row, 0)->data(Qt::UserRole).toInt()))
+            profileTable->removeRow(row);
     });
     profileLayout->addWidget(profileTable);
 

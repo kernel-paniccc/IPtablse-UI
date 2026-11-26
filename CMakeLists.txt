@@ -9,6 +9,7 @@ set(CMAKE_AUTOMOC ON)
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
 qt_add_executable(iptables-ui
+    src/ruleprofile.cpp
     src/main.cpp
     src/mainwindow.cpp
     src/mainwindow.h

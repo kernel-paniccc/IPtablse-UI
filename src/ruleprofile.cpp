@@ -1,5 +1,6 @@
 #include "ruleprofile.h"
 #include <algorithm>
+#include <QStringList>
 
 // Добавление правила с уникальным идентификатором
 bool RuleProfile::addRule(ProfileRule& rule, QString* errorMessage)
