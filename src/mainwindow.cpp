@@ -90,7 +90,8 @@ MainWindow::MainWindow(QWidget *parent)
     auto *editRuleButton = new QPushButton("Изменить", profilePage);
     auto *deleteRuleButton = new QPushButton("Удалить", profilePage);
 
-    profileButtons->addWidget(new QPushButton("Добавить", profilePage));
+    auto *addRuleButton = new QPushButton("Добавить", profilePage);
+    profileButtons->addWidget(addRuleButton);
     profileButtons->addWidget(editRuleButton);
     profileButtons->addWidget(deleteRuleButton);
     profileButtons->addStretch();
@@ -179,6 +180,15 @@ MainWindow::MainWindow(QWidget *parent)
         portInput->setValue(443);
         actionSelector->setCurrentIndex(0);
         clearPreview();
+    });
+    connect(addRuleButton, &QPushButton::clicked, this,
+            [profileTable, chainSelector, protocolSelector, portInput, actionSelector]() {
+        const int row = profileTable->rowCount();
+        profileTable->insertRow(row);
+        profileTable->setItem(row, 0, new QTableWidgetItem(chainSelector->currentText()));
+        profileTable->setItem(row, 1, new QTableWidgetItem(protocolSelector->currentText()));
+        profileTable->setItem(row, 2, new QTableWidgetItem(QString::number(portInput->value())));
+        profileTable->setItem(row, 3, new QTableWidgetItem(actionSelector->currentText()));
     });
     profileLayout->addWidget(profileTable);
 
