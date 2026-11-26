@@ -87,10 +87,26 @@ MainWindow::MainWindow(QWidget *parent)
     profileTable->setHorizontalHeaderLabels({"Цепочка", "Протокол", "Порт назначения", "Действие"});
     profileTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     auto *profileButtons = new QHBoxLayout;
+    auto *editRuleButton = new QPushButton("Изменить", profilePage);
+    auto *deleteRuleButton = new QPushButton("Удалить", profilePage);
+
     profileButtons->addWidget(new QPushButton("Добавить", profilePage));
-    profileButtons->addWidget(new QPushButton("Изменить", profilePage));
-    profileButtons->addWidget(new QPushButton("Удалить", profilePage));
+    profileButtons->addWidget(editRuleButton);
+    profileButtons->addWidget(deleteRuleButton);
     profileButtons->addStretch();
+
+    profileTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    profileTable->setSelectionMode(QAbstractItemView::SingleSelection);
+
+    editRuleButton->setEnabled(false);
+    deleteRuleButton->setEnabled(false);
+
+    connect(profileTable, &QTableWidget::itemSelectionChanged, this,
+            [profileTable, editRuleButton, deleteRuleButton] {
+        const bool hasSelection = !profileTable->selectedItems().isEmpty();
+        editRuleButton->setEnabled(hasSelection);
+        deleteRuleButton->setEnabled(hasSelection);
+    });
     auto *chainLayout = new QHBoxLayout;
     chainLayout->addWidget(new QLabel("Цепочка:", profilePage));
 
