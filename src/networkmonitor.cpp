@@ -9,13 +9,16 @@
 #include <linux/if_link.h>
 #endif
 
-QPair<quint64, quint64> NetworkMonitor::readByteCounters() const
+QPair<quint64, quint64> NetworkMonitor::readByteCounters()
 {
     quint64 received = 0;
     quint64 transmitted = 0;
     ifaddrs *interfaces = nullptr;
-    if (getifaddrs(&interfaces) != 0)
+    if (getifaddrs(&interfaces) != 0) {
+        lastReadFailed_ = true;
         return {0, 0};
+    }
+    lastReadFailed_ = false;
 
     for (auto *entry = interfaces; entry; entry = entry->ifa_next) {
         if (!entry->ifa_data || !entry->ifa_name || (entry->ifa_flags & IFF_LOOPBACK))
@@ -36,6 +39,11 @@ QPair<quint64, quint64> NetworkMonitor::readByteCounters() const
     }
     freeifaddrs(interfaces);
     return {received, transmitted};
+}
+
+bool NetworkMonitor::isAvailable() const
+{
+    return true;
 }
 
 QPair<double, double> NetworkMonitor::sampleMbps()
@@ -61,4 +69,3 @@ QPair<double, double> NetworkMonitor::sampleMbps()
     previousTx_ = counters.second;
     return {incoming, outgoing};
 }
-
