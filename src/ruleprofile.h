@@ -15,6 +15,8 @@ public:
 
     const std::vector<ProfileRule>& rules() const { return rules_; }
     std::optional<ProfileRule> getRuleById(int id) const;
+    std::vector<ProfileRule> filterByProtocol(const QString& proto) const;
+    std::vector<ProfileRule> filterByPort(int port) const;
     
     void clear() { rules_.clear(); nextId_ = 1; }
 

@@ -69,3 +69,16 @@ bool RuleProfile::validateRule(const ProfileRule& rule, QString* errorMessage)
     }
     return true;
 }
+
+std::vector<ProfileRule> RuleProfile::filterByProtocol(const QString& proto) const {
+    std::vector<ProfileRule> out;
+    std::copy_if(rules_.begin(), rules_.end(), std::back_inserter(out),
+        [&](const ProfileRule& r){ return r.protocol.compare(proto, Qt::CaseInsensitive) == 0; });
+    return out;
+}
+std::vector<ProfileRule> RuleProfile::filterByPort(int port) const {
+    std::vector<ProfileRule> out;
+    std::copy_if(rules_.begin(), rules_.end(), std::back_inserter(out),
+        [port](const ProfileRule& r){ return r.destinationPort == port; });
+    return out;
+}

@@ -1,23 +1,17 @@
 #pragma once
 
+#include "iptablesconnector.h"
+
 #include <QList>
 #include <QString>
 
-struct IptablesRule
-{
-    QString chain;
-    QString action;
-    QString protocol;
-    QString source;
-    QString destination;
-    QString port;
-    QString interfaceName;
-    QString packets;
-};
-
-class IptablesLoader
+class IptablesLoader final : public IptablesConnector
 {
 public:
-    QList<IptablesRule> load(QString *errorMessage = nullptr) const;
-};
+    QList<IptablesRule> loadRules(QString* errorMessage = nullptr) const override;
 
+    QList<IptablesRule> load(QString* errorMessage = nullptr) const
+    {
+        return loadRules(errorMessage);
+    }
+};

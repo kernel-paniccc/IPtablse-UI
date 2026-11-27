@@ -13,12 +13,14 @@ qt_add_executable(iptables-ui
     src/main.cpp
     src/mainwindow.cpp
     src/mainwindow.h
+    src/iptablesrule.h 
     src/iptablesloader.cpp
     src/iptablesloader.h
     src/networkmonitor.cpp
     src/networkmonitor.h
     src/trafficwidget.cpp
     src/trafficwidget.h
+    src/profilestorage_json.cpp
 )
 
 target_link_libraries(iptables-ui PRIVATE Qt6::Widgets)
