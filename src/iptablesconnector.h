@@ -1,12 +1,7 @@
 #pragma once
-
-#include "iptablesrule.h"
-
+#include "iptablesloader.h"   // используем существующий IptablesRule
 #include <QList>
-#include <QString>
-
-class IptablesConnector
-{
+class IptablesConnector {
 public:
     virtual ~IptablesConnector() = default;
     virtual QList<IptablesRule> loadRules(QString* errorMessage = nullptr) const = 0;

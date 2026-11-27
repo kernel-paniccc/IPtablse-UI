@@ -57,3 +57,4 @@ QList<IptablesRule> IptablesLoader::loadRules(QString *errorMessage) const
     }
     return rules;
 }
+
