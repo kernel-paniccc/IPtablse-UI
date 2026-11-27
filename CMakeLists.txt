@@ -12,6 +12,7 @@ qt_add_executable(iptables-ui
     src/main.cpp
     src/mainwindow.cpp
     src/mainwindow.h
+    src/iptablesrule.h
     src/iptablesloader.cpp
     src/iptablesloader.h
     src/networkmonitor.cpp
