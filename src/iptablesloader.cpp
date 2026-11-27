@@ -4,7 +4,7 @@
 #include <QRegularExpression>
 #include <QStandardPaths>
 
-QList<IptablesRule> IptablesLoader::load(QString *errorMessage) const
+QList<IptablesRule> IptablesLoader::loadRules(QString *errorMessage) const
 {
     const QString executable = QStandardPaths::findExecutable("iptables-save");
     if (executable.isEmpty()) {
