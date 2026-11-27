@@ -196,6 +196,26 @@ MainWindow::MainWindow(QWidget *parent)
             profileTable->removeRow(row);
         }
     });
+    connect(profileTable, &QTableWidget::cellDoubleClicked, this,
+            [profileTable, chainSelector, protocolSelector, portInput, actionSelector](int row, int) {
+        chainSelector->setCurrentText(profileTable->item(row, 0)->text());
+        protocolSelector->setCurrentText(profileTable->item(row, 1)->text());
+        portInput->setValue(profileTable->item(row, 2)->text().toInt());
+        actionSelector->setCurrentText(profileTable->item(row, 3)->text());
+    });
+
+    connect(editRuleButton, &QPushButton::clicked, this,
+            [profileTable, chainSelector, protocolSelector, portInput, actionSelector]() {
+        const int row = profileTable->currentRow();
+        if (row < 0) {
+            return;
+        }
+
+        profileTable->item(row, 0)->setText(chainSelector->currentText());
+        profileTable->item(row, 1)->setText(protocolSelector->currentText());
+        profileTable->item(row, 2)->setText(QString::number(portInput->value()));
+        profileTable->item(row, 3)->setText(actionSelector->currentText());
+    });
     profileLayout->addWidget(profileTable);
 
     setCentralWidget(tabs);
