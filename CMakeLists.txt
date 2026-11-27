@@ -18,6 +18,7 @@ qt_add_executable(iptables-ui
     src/networkmonitor.h
     src/trafficwidget.cpp
     src/trafficwidget.h
+    src/profilestorage_json.cpp
 )
 
 target_link_libraries(iptables-ui PRIVATE Qt6::Widgets)
