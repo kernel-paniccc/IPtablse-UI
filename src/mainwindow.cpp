@@ -190,6 +190,12 @@ MainWindow::MainWindow(QWidget *parent)
         profileTable->setItem(row, 2, new QTableWidgetItem(QString::number(portInput->value())));
         profileTable->setItem(row, 3, new QTableWidgetItem(actionSelector->currentText()));
     });
+    connect(deleteRuleButton, &QPushButton::clicked, this, [profileTable]() {
+        const int row = profileTable->currentRow();
+        if (row >= 0) {
+            profileTable->removeRow(row);
+        }
+    });
     profileLayout->addWidget(profileTable);
 
     setCentralWidget(tabs);
